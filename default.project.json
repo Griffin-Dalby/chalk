@@ -1,0 +1,23 @@
+{
+  "name": "chalk",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "chalk": { "$path": "src" },
+      "Packages": { "$path": "Packages" }
+    },
+
+    "ServerScriptService": {
+      "RunTests": { "$path": "tests/run" }
+    },
+
+    "Workspace": {
+      "$className": "Workspace",
+      "Terrain": {
+        "$className": "Terrain",
+        "chalk": { "$className": "Folder" }        
+      }
+    }
+  }
+}
