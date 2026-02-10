@@ -50,6 +50,8 @@ function Object.new(config: ChalkTypes.DebugObjectConfig)
     }
 
     local shape_behavior = Shapes[config.shape]
+    assert(shape_behavior, `[{script.Name}] Failed to find ShapeBehavior for "{config.shape}"!`)
+    
     self.shape = shape_behavior.mount(ctx, config.config)
 
     --> Internal Behavior
