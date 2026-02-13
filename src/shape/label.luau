@@ -18,7 +18,7 @@ function LabelShape.mount(ctx, args)
     base.Parent = ctx.render.Parent
     base.Transparency = 1
 
-    state.base = base
+    state.part = base
 
     local label = Instance.new("BillboardGui")
     label.Size = UDim2.new(12, 0, .75, 0)
@@ -36,15 +36,16 @@ function LabelShape.mount(ctx, args)
     stroke.Thickness, stroke.Transparency = 2, .25
     stroke.Parent = text
 
-    state.text = text
+    state.label = text
 
     --> Reconcile
     LabelShape.reconcile(ctx, state, args)
+    return { part = base, label = text }
 end
 
 function LabelShape.reconcile(ctx, state, args)
-    state.text.Text = args.text
-    state.base.CFrame = CFrame.new(args.position)
+    state.label.Text = args.text
+    state.part.CFrame = CFrame.new(args.position)
 end
 
 function LabelShape.unmount(ctx, state)

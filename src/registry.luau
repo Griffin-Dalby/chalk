@@ -11,11 +11,13 @@ local ChalkTypes = require(script.Parent.types)
 --]] Settings
 local ERRORS = {
     Register = {
-        Conflict = "Attempt was made to register object \"%s\", but it's already registered!"
+        Conflict = "Attempt was made to register object \"%s\", but it's already registered!",
+        Conflict_Adhesive = "Attempt was made to register adhesive \"%s\", but it's already registered!"
     },
 
     Unregister = {
-        Failure = "Atempt was made to unregister object \"%s\", but it isn't registered!"
+        Failure = "Atempt was made to unregister object \"%s\", but it isn't registered!",
+        Failure_Adhesive = "Attempt was made to unregister adhesive \"%s\", but it isn't registered!"
     }
 }
 
@@ -32,6 +34,7 @@ function Registry.get()
     local self = setmetatable({} :: ChalkTypes.fields_registry, Registry)
 
     self.objects = {}
+    self.adhesives = {}
 
     Registry.instance = self
     return self
@@ -64,6 +67,27 @@ function Registry:Unregister(object_id)
 
     --> Commit
     self.objects[object_id] = nil
+end
+
+function Registry:RegisterAdhesive(adhesive)
+    --> Extract ID
+    local adhesive_id = adhesive.id
+
+    --> Conflict Check
+    if self.adhesives[adhesive_id] then
+            error((ERRORS.Register.Conflict_Adhesive::any):format(adhesive_id)) end
+    
+    --> Commit
+    self.adhesives[adhesive_id] = adhesive
+end
+
+function Registry:UnregisterAdhesive(adhesive_id)
+    --> Existence Check
+    if not self.adhesives[adhesive_id] then
+        error((ERRORS.Unregister.Failure_Adhesive::any):format(adhesive_id)) end
+
+    --> Commit
+    self.adhesives[adhesive_id] = nil
 end
 
 --===========--

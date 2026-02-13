@@ -64,7 +64,7 @@ export type ShapeContext = {
 }
 
 export type ShapeState = {
-
+    part: BasePart,
 }
 
 export type ShapeImpl<args> = {
@@ -99,6 +99,10 @@ export type methods_object<shape = ObjectArguments|any?> = {
     Update: (self: DebugObject<shape>, config: index<ObjectArguments, shape>) -> (),
     Destroy: () -> (),
 
+    --[[ DRAW HELPERS ]]--
+    Line: (self: DebugObject<shape>, to: Vector3, size: number?) -> DebugObject<shape>,
+    Label: (self: DebugObject<shape>, label: string) -> DebugObject<shape>,
+
     --[[ ACCESSORS ]]--
 
 }
@@ -114,6 +118,44 @@ export type fields_object<shape> = {
 }
 
 export type DebugObject<shape = ObjectShapes?> = typeof(setmetatable({} :: fields_object<shape>, {} :: methods_object<shape>))
+
+--#endregion
+
+--==========--
+-- ADHESIVE --
+--==========--
+--#region
+export type methods_adhesive = {
+    __index: methods_adhesive,
+    
+    --[[
+        Creates a new Adhesive object, which allows different objects
+        together.
+
+        @return ChalkAdhesive
+    ]]
+    new: () -> ChalkAdhesive,
+
+    --=========--
+    -- METHODS --
+    --=========--
+
+    --[[
+        Adds a object to the adhesive connections.
+
+        @param object Reference to the DebugObject
+    ]]
+    Add: ( self: ChalkAdhesive, object: DebugObject<ObjectShapes> ) -> (),
+
+}
+
+export type fields_adhesive = {
+    id: string,
+
+    connections: { DebugObject<ObjectShapes> }
+}
+
+export type ChalkAdhesive = typeof(setmetatable({} :: fields_adhesive, {} :: methods_adhesive))
 
 --#endregion
 
@@ -136,12 +178,19 @@ export type methods_registry = {
     Register: (self: ChalkRegistry, object: DebugObject<ObjectShapes>) -> (),
 
     --// TODO: Write Documentation
-    Unregister: (self: ChalkRegistry, object_id: string) -> ()
+    Unregister: (self: ChalkRegistry, object_id: string) -> (),
+
+    --// TODO: Write Documentation
+    RegisterAdhesive: (self: ChalkRegistry, adhesive: ChalkAdhesive) -> (),
+
+    --// TODO: Write Documentation
+    UnregisterAdhesive: (self: ChalkRegistry, adhesive_id: string) -> ()
 
     --[[ ACCESSORS ]]--
 }
 export type fields_registry = {
     objects: { [string]: DebugObject<ObjectShapes> },
+    adhesives: { [string]: ChalkAdhesive },
 }
 
 export type ChalkRegistry = typeof(setmetatable({} :: fields_registry, {} :: methods_registry))

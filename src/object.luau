@@ -53,6 +53,7 @@ function Object.new(config: ChalkTypes.DebugObjectConfig)
     assert(shape_behavior, `[{script.Name}] Failed to find ShapeBehavior for "{config.shape}"!`)
     
     self.shape = shape_behavior.mount(ctx, config.config)
+    self.shape.part.Name = self.id
 
     --> Internal Behavior
     self._reconcile = function(args)
@@ -93,6 +94,30 @@ function Object:Destroy()
 end
 
 --] Helper
+--// TODO: Allow these to take in other Objects for origins
+function Object:Line(to: Vector3, thickness: number?)
+    local new_line = Object.new{
+        shape = "line",
+        config = { 
+            from = (self.shape.part :: Part).Position, 
+            to = to, 
+            thickness = thickness }
+    }
+
+    return new_line
+end
+
+function Object:Label(label: string)
+    local new_label = Object.new{
+        shape = "label",
+        config = {
+            position = (self.shape.part :: Part).Position,
+            text = label
+        }
+    }
+
+    return new_label
+end
 
 --===========--
 -- ACCESSORS --
